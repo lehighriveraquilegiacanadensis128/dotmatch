@@ -4,6 +4,10 @@ const page = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
 const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
 const layout = readFileSync(new URL("../app/layout.tsx", import.meta.url), "utf8");
 const nextConfig = readFileSync(new URL("../next.config.ts", import.meta.url), "utf8");
+const renderSocialImages = readFileSync(
+  new URL("../scripts/render_social_images.py", import.meta.url),
+  "utf8"
+);
 const pageNormalized = page.replace(/\s+/g, " ");
 const layoutNormalized = layout.replace(/\s+/g, " ");
 
@@ -108,4 +112,42 @@ if (missingCss.length > 0) {
 if (!layoutNormalized.includes("CRISPR guide counts, barcode splits, and QC reports")) {
   console.error("Metadata should describe practical user outcomes, not just implementation mechanics.");
   process.exit(1);
+}
+
+const requiredMetadataSnippets = [
+  "DotMatch - Auditable CRISPR Guide Counting",
+  "openGraph: {",
+  "siteName: \"DotMatch\"",
+  "locale: \"en_US\"",
+  "secureUrl: socialImageUrl",
+  "type: \"image/png\"",
+  "DotMatch social preview showing CRISPR guide-count assignment into known DNA target rows"
+];
+
+const missingMetadata = requiredMetadataSnippets.filter((snippet) => !layout.includes(snippet));
+if (missingMetadata.length > 0) {
+  console.error("Missing rich Open Graph/Twitter metadata:");
+  for (const snippet of missingMetadata) {
+    console.error(`- ${snippet}`);
+  }
+  process.exit(1);
+}
+
+if (!renderSocialImages.includes("public\" / \"dotmatch-social-art.png\"")) {
+  console.error("Social image renderer should use the project-local generated background source.");
+  process.exit(1);
+}
+
+for (const imagePath of ["../public/dotmatch-og.png", "../public/dotmatch-twitter.png"]) {
+  const png = readFileSync(new URL(imagePath, import.meta.url));
+  if (png.length < 24) {
+    console.error(`${imagePath} is too small to be a valid PNG.`);
+    process.exit(1);
+  }
+  const width = png.readUInt32BE(16);
+  const height = png.readUInt32BE(20);
+  if (width !== 1200 || height !== 630) {
+    console.error(`${imagePath} must be 1200x630 for Open Graph/Twitter previews; saw ${width}x${height}.`);
+    process.exit(1);
+  }
 }
