@@ -290,6 +290,66 @@ h3 {
   background: var(--line);
 }
 
+.launch-section {
+  background: #fff;
+}
+
+.launch-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.launch-card {
+  min-height: 360px;
+  padding: 1.35rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.launch-card h3 {
+  max-width: 520px;
+  margin-bottom: 1rem;
+  font-size: clamp(1.45rem, 2vw, 2rem);
+  line-height: 1.08;
+}
+
+.launch-card p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.launch-card pre {
+  overflow-x: auto;
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid #1d2a24;
+  border-radius: 8px;
+  background: #08110d;
+}
+
+.launch-card code {
+  color: #d9f9eb;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.launch-card a,
+.link-stack a {
+  color: var(--green);
+  font-weight: 820;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.link-stack {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 1.25rem;
+}
+
 .proof-card {
   min-height: 230px;
   padding: 1.2rem;
@@ -713,6 +773,7 @@ h3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .launch-grid,
   .benchmark-grid,
   .benchmark-card.split {
     grid-template-columns: 1fr;

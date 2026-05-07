@@ -17,6 +17,11 @@ const useCases = [
   }
 ];
 
+const repoUrl = "https://github.com/Dnncha/dotmatch";
+const citationUrl = `${repoUrl}/blob/main/CITATION.cff`;
+const methodsUrl = `${repoUrl}/blob/main/docs/methods-and-citation.md`;
+const publicCrisprUrl = `${repoUrl}/blob/main/docs/benchmarks/public_crispr/README.md`;
+
 const proof = [
   ["Current scope", "known targets", "Short DNA barcodes, guides, primers, adapters, panels, and whitelist-style target sets. Not genome-scale alignment."],
   ["Assignment invariant", "indexed = exhaustive", "Indexed paths must match the native exhaustive assignment oracle for the same targets, k, and ambiguity policy."],
@@ -77,11 +82,12 @@ export default function Home() {
         </a>
         <nav aria-label="Primary navigation">
           <a href="#benchmarks">Benchmarks</a>
+          <a href="#install">Install</a>
           <a href="#use-cases">Use cases</a>
-          <a href="#comparison">Comparison</a>
-          <a href="#workflow">Workflow</a>
+          <a href="#cite">Cite</a>
+          <a href={repoUrl}>GitHub</a>
         </nav>
-        <a className="header-cta" href="#workflow">Get started</a>
+        <a className="header-cta" href={repoUrl}>Source</a>
       </header>
 
       <section id="top" className="hero">
@@ -99,8 +105,11 @@ export default function Home() {
             <a href="#benchmarks" className="button primary">
               Explore results
             </a>
-            <a href="#workflow" className="button secondary">
-              See commands
+            <a href="#install" className="button secondary">
+              Install
+            </a>
+            <a href={repoUrl} className="button secondary">
+              GitHub
             </a>
           </div>
         </div>
@@ -132,6 +141,57 @@ export default function Home() {
               <span key={i} className={i % 7 === 0 ? "hot" : i % 5 === 0 ? "cool" : ""} />
             ))}
           </div>
+        </div>
+      </section>
+
+      <section id="install" className="section launch-section">
+        <div className="section-heading">
+          <h2>Install, verify, and cite from the first visit.</h2>
+          <p>
+            DotMatch is ready to inspect from source today. The current launch
+            path keeps the package boundary honest while making the reproducible
+            evidence and citation route visible.
+          </p>
+        </div>
+        <div className="launch-grid">
+          <article className="launch-card">
+            <span className="card-label">Install from source</span>
+            <h3>Clone, build, and run the repository verifier.</h3>
+            <pre><code>{`git clone https://github.com/Dnncha/dotmatch.git
+cd dotmatch
+make
+python3 -m pip install .
+make repository-ready`}</code></pre>
+            <a href={repoUrl}>Open the source repository</a>
+          </article>
+
+          <article id="cite" className="launch-card">
+            <span className="card-label">Citation path</span>
+            <h3>Use the software citation and methods text.</h3>
+            <p>
+              The repository includes a CFF citation file and a methods template
+              for CRISPR guide-counting, one-edit Levenshtein rescue, and
+              Hamming-only comparison workflows.
+            </p>
+            <div className="link-stack">
+              <a href={citationUrl}>CITATION.cff</a>
+              <a href={methodsUrl}>Methods and citation notes</a>
+            </div>
+          </article>
+
+          <article className="launch-card">
+            <span className="card-label">Evidence trail</span>
+            <h3>Benchmark claims link back to checked artifacts.</h3>
+            <p>
+              The strongest public claim today is CRISPR guide-counting on the
+              documented MAGeCK/Yusa rows, with validation gates and raw
+              benchmark tables checked into the repository.
+            </p>
+            <div className="link-stack">
+              <a href={publicCrisprUrl}>Public CRISPR benchmark report</a>
+              <a href="#benchmarks">Review benchmark summary</a>
+            </div>
+          </article>
         </div>
       </section>
 
