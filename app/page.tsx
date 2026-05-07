@@ -17,7 +17,7 @@ const useCases = [
   }
 ];
 
-const repoUrl = "https://github.com/Dnncha/dotmatch";
+const repoUrl = "https://github.com/dnncha/dotmatch";
 const citationUrl = `${repoUrl}/blob/main/CITATION.cff`;
 const methodsUrl = `${repoUrl}/blob/main/docs/methods-and-citation.md`;
 const publicCrisprUrl = `${repoUrl}/blob/main/docs/benchmarks/public_crispr/README.md`;
@@ -157,7 +157,7 @@ export default function Home() {
           <article className="launch-card">
             <span className="card-label">Install from source</span>
             <h3>Clone, build, and run the repository verifier.</h3>
-            <pre><code>{`git clone https://github.com/Dnncha/dotmatch.git
+            <pre><code>{`git clone https://github.com/dnncha/dotmatch.git
 cd dotmatch
 make
 python3 -m pip install .

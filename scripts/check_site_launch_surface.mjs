@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 const page = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
 
 const requiredSnippets = [
-  ["GitHub source link", "https://github.com/Dnncha/dotmatch"],
+  ["GitHub source link", "https://github.com/dnncha/dotmatch"],
   ["install section anchor", "id=\"install\""],
   ["citation section anchor", "id=\"cite\""],
   ["methods docs link", "docs/methods-and-citation.md"],
