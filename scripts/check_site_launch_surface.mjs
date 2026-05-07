@@ -2,6 +2,8 @@ import { readFileSync } from "node:fs";
 
 const page = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
 const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
+const nextConfig = readFileSync(new URL("../next.config.ts", import.meta.url), "utf8");
+const pageNormalized = page.replace(/\s+/g, " ");
 
 const requiredSnippets = [
   ["GitHub source link", "https://github.com/dnncha/dotmatch"],
@@ -9,10 +11,26 @@ const requiredSnippets = [
   ["citation section anchor", "id=\"cite\""],
   ["methods docs link", "docs/methods-and-citation.md"],
   ["benchmark evidence link", "docs/benchmarks/public_crispr/README.md"],
-  ["citation file link", "CITATION.cff"]
+  ["citation file link", "CITATION.cff"],
+  ["plain maintainer voice", "DotMatch is a small C/Python tool"],
+  ["auditable benchmark framing", "These rows are not a leaderboard."],
+  ["honest install framing", "the honest first install is from source"],
+  ["human caveat framing", "We are keeping the claims narrow"]
 ];
 
-const missing = requiredSnippets.filter(([, snippet]) => !page.includes(snippet));
+const missing = requiredSnippets.filter(([, snippet]) => !pageNormalized.includes(snippet));
+const bannedPhrases = [
+  "launch path",
+  "evidence trail",
+  "current scope",
+  "boundary",
+  "workflow-ready",
+  "strongest public claim",
+  "checked artifacts",
+  "current support"
+];
+const pageLower = page.toLowerCase();
+const banned = bannedPhrases.filter((phrase) => pageLower.includes(phrase));
 
 if (missing.length > 0) {
   console.error("Missing launch-surface affordances:");
@@ -22,7 +40,35 @@ if (missing.length > 0) {
   process.exit(1);
 }
 
+if (banned.length > 0) {
+  console.error("Copy still contains release-note or machine-like phrasing:");
+  for (const phrase of banned) {
+    console.error(`- ${phrase}`);
+  }
+  process.exit(1);
+}
+
 if (!css.includes(".sequence-rail {\n  position: relative;")) {
   console.error("The hero sequence rail must stay in normal flow to avoid overlapping metric text.");
+  process.exit(1);
+}
+
+if (css.includes("min-height: 360px;")) {
+  console.error("Launch cards should size to their content; fixed tall cards create empty mobile space.");
+  process.exit(1);
+}
+
+if (!css.includes(".launch-card {\n  min-width: 0;")) {
+  console.error("Launch cards need min-width: 0 so long commands cannot force mobile overflow.");
+  process.exit(1);
+}
+
+if (!css.includes("overflow-wrap: anywhere;")) {
+  console.error("Launch command text should wrap on mobile instead of hiding the repository URL.");
+  process.exit(1);
+}
+
+if (!nextConfig.includes("devIndicators: false")) {
+  console.error("Disable the local Next.js dev indicator so it does not look like part of the site.");
   process.exit(1);
 }

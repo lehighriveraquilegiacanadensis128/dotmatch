@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   output: process.env.NEXT_OUTPUT === "export" ? "export" : undefined,
   basePath,
   assetPrefix: basePath,
+  devIndicators: false,
   images: {
     unoptimized: true
   }
