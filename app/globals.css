@@ -125,9 +125,10 @@ p {
 }
 
 h1 {
+  padding-top: 0.08em;
   margin-bottom: 1.1rem;
   font-size: clamp(4.5rem, 9vw, 8.7rem);
-  line-height: 0.88;
+  line-height: 1;
   letter-spacing: 0;
 }
 
@@ -140,6 +141,7 @@ h1 {
 }
 
 .hero-text,
+.hero-note,
 .section-heading p,
 .workflow-copy p,
 .final-cta p {
@@ -150,6 +152,15 @@ h1 {
 
 .hero-text {
   max-width: 610px;
+}
+
+.hero-note {
+  max-width: 650px;
+  margin-top: 1rem;
+}
+
+.hero-note strong {
+  color: var(--ink);
 }
 
 .hero-actions {
@@ -258,6 +269,7 @@ h1 {
 }
 
 .section {
+  scroll-margin-top: 88px;
   padding: 6.5rem 4vw;
 }
 
@@ -286,6 +298,126 @@ h3 {
   margin-bottom: 1.6rem;
   border: 1px solid var(--line);
   background: var(--line);
+}
+
+.decision-section {
+  background: #fff;
+}
+
+.decision-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.decision-card {
+  padding: 1.35rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.decision-card h3 {
+  margin-bottom: 1rem;
+  font-size: clamp(1.35rem, 2vw, 1.9rem);
+  line-height: 1.1;
+}
+
+.decision-card ul {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.translation-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 1rem;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.translation-grid div {
+  min-height: 140px;
+  padding: 1rem;
+  background: #f7fbf9;
+}
+
+.translation-grid span {
+  display: block;
+  margin-bottom: 0.8rem;
+  color: var(--green);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-weight: 800;
+}
+
+.translation-grid p {
+  margin-bottom: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.example-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(360px, 0.75fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.example-card,
+.ambiguity-example {
+  min-width: 0;
+  padding: 1.35rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.example-card pre,
+.ambiguity-example pre {
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid #1d2a24;
+  border-radius: 8px;
+  background: #08110d;
+}
+
+.example-card code,
+.ambiguity-example code {
+  color: #d9f9eb;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.output-list {
+  display: grid;
+  grid-template-columns: minmax(0, 0.52fr) minmax(0, 1fr);
+  gap: 0.65rem 1rem;
+  padding-top: 0.25rem;
+}
+
+.output-list code {
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.output-list span,
+.ambiguity-example p {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.ambiguity-example p {
+  margin-bottom: 0;
 }
 
 .launch-section {
@@ -614,6 +746,7 @@ h3 {
   gap: 1rem;
 }
 
+.status-table,
 .comparison-table {
   overflow: hidden;
   border: 1px solid var(--line);
@@ -621,30 +754,47 @@ h3 {
   background: #fff;
 }
 
+.status-table > div,
 .comparison-table > div {
   display: grid;
-  grid-template-columns: 0.85fr 1fr 1fr;
   gap: 1rem;
   padding: 1rem;
   border-bottom: 1px solid var(--line);
 }
 
+.status-table > div {
+  grid-template-columns: 0.7fr 0.46fr 1.3fr;
+}
+
+.comparison-table > div {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
+}
+
+.status-table > div:last-child,
 .comparison-table > div:last-child {
   border-bottom: 0;
 }
 
+.status-table .table-head,
 .comparison-table .table-head {
   background: #eef6f2;
   font-weight: 800;
 }
 
+.status-table .table-head span,
 .comparison-table .table-head span {
   color: var(--ink);
 }
 
+.status-table div span:first-child,
 .comparison-table div span:first-child {
   color: var(--ink);
   font-weight: 760;
+}
+
+.status-table span {
+  color: var(--muted);
+  line-height: 1.55;
 }
 
 .evidence-notes {
@@ -756,6 +906,7 @@ h3 {
 
   .hero,
   .comparison-layout,
+  .example-layout,
   .workflow {
     grid-template-columns: 1fr;
   }
@@ -770,11 +921,13 @@ h3 {
   }
 
   .proof-grid,
+  .translation-grid,
   .usecase-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .launch-grid,
+  .decision-grid,
   .benchmark-grid,
   .benchmark-card.split {
     grid-template-columns: 1fr;
@@ -810,7 +963,12 @@ h3 {
 
   .metric-grid,
   .proof-grid,
+  .translation-grid,
   .usecase-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .output-list {
     grid-template-columns: 1fr;
   }
 
@@ -818,19 +976,23 @@ h3 {
     margin-top: 1rem;
   }
 
+  .status-table > div,
   .comparison-table > div {
     grid-template-columns: 1fr;
     gap: 0.45rem;
   }
 
+  .status-table .table-head,
   .comparison-table .table-head {
     display: none;
   }
 
+  .status-table div span:first-child,
   .comparison-table div span:first-child {
     margin-bottom: 0.35rem;
   }
 
+  .status-table div span:not(:first-child)::before,
   .comparison-table div span:not(:first-child)::before {
     content: attr(data-label);
     display: block;

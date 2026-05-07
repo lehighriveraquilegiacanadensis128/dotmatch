@@ -2,8 +2,10 @@ import { readFileSync } from "node:fs";
 
 const page = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
 const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
+const layout = readFileSync(new URL("../app/layout.tsx", import.meta.url), "utf8");
 const nextConfig = readFileSync(new URL("../next.config.ts", import.meta.url), "utf8");
 const pageNormalized = page.replace(/\s+/g, " ");
+const layoutNormalized = layout.replace(/\s+/g, " ");
 
 const requiredSnippets = [
   ["GitHub source link", "https://github.com/dnncha/dotmatch"],
@@ -15,7 +17,20 @@ const requiredSnippets = [
   ["plain maintainer voice", "DotMatch is a small C/Python tool"],
   ["auditable benchmark framing", "These rows are not a leaderboard."],
   ["honest install framing", "the honest first install is from source"],
-  ["human caveat framing", "We are keeping the claims narrow"]
+  ["human caveat framing", "We are keeping the claims narrow"],
+  ["biology-first hero", "Auditable assignment of short sequencing reads to known DNA targets."],
+  ["validated use-case lead", "Best-supported today: CRISPR guide counting"],
+  ["decision box inclusion", "Use DotMatch when you have"],
+  ["decision box exclusion", "Do not use DotMatch for"],
+  ["hamming translation", "allow one mismatch, no indels"],
+  ["levenshtein translation", "allow one substitution, insertion, or deletion"],
+  ["plain benchmark sentence", "DotMatch Hamming k=1 processed about 331k reads/s"],
+  ["validation sample size", "2,000 checked reads"],
+  ["distribution maturity now", "Current distribution: source install and release artifacts."],
+  ["distribution maturity next", "Coming next: PyPI, Bioconda, Docker/Singularity, Zenodo DOI."],
+  ["ambiguity example setup", "Some tools may pick or double-count."],
+  ["ambiguity example result", "DotMatch reports: ambiguous"],
+  ["workflow status table", "Validated now"]
 ];
 
 const missing = requiredSnippets.filter(([, snippet]) => !pageNormalized.includes(snippet));
@@ -29,8 +44,8 @@ const bannedPhrases = [
   "checked artifacts",
   "current support"
 ];
-const pageLower = page.toLowerCase();
-const banned = bannedPhrases.filter((phrase) => pageLower.includes(phrase));
+const checkedCopyLower = `${page}\n${layout}`.toLowerCase();
+const banned = bannedPhrases.filter((phrase) => checkedCopyLower.includes(phrase));
 
 if (missing.length > 0) {
   console.error("Missing launch-surface affordances:");
@@ -70,5 +85,27 @@ if (!css.includes("overflow-wrap: anywhere;")) {
 
 if (!nextConfig.includes("devIndicators: false")) {
   console.error("Disable the local Next.js dev indicator so it does not look like part of the site.");
+  process.exit(1);
+}
+
+const requiredCss = [
+  [".decision-grid", "The near-hero decision box should stay styled and visible."],
+  [".translation-grid", "Jargon translations need a distinct scannable layout."],
+  [".example-layout", "The biological example needs a stable two-column desktop layout."],
+  [".status-table", "Workflow maturity should remain separated from benchmark charts."],
+  [".ambiguity-example", "The ambiguity story should remain concrete."]
+];
+
+const missingCss = requiredCss.filter(([selector]) => !css.includes(selector));
+if (missingCss.length > 0) {
+  console.error("Missing adoption-focused CSS hooks:");
+  for (const [selector, message] of missingCss) {
+    console.error(`- ${selector}: ${message}`);
+  }
+  process.exit(1);
+}
+
+if (!layoutNormalized.includes("CRISPR guide counts, barcode splits, and QC reports")) {
+  console.error("Metadata should describe practical user outcomes, not just implementation mechanics.");
   process.exit(1);
 }

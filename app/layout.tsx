@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "DotMatch - Exact Short-DNA Assignment",
   description:
-    "DotMatch is a fast exact short-DNA known-target assignment engine for CRISPR guides, barcodes, primers, panels, and whitelists.",
+    "DotMatch turns known short-DNA FASTQs into CRISPR guide counts, barcode splits, and QC reports with explicit ambiguity handling.",
   keywords: [
     "bioinformatics",
     "computational biology",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "DotMatch",
     description:
-      "Exact one-edit known-target assignment with deterministic ambiguity semantics and workflow-ready FASTQ outputs.",
+      "CRISPR guide counts, barcode splits, and QC reports for known short-DNA targets, with ambiguous reads reported instead of guessed.",
     type: "website",
     url: siteUrl,
     images: [
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "DotMatch",
     description:
-      "Exact one-edit known-target assignment with deterministic ambiguity semantics and workflow-ready FASTQ outputs.",
+      "CRISPR guide counts, barcode splits, and QC reports for known short-DNA targets, with ambiguous reads reported instead of guessed.",
     images: [
       {
         url: twitterImageUrl,

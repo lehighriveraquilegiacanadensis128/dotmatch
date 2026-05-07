@@ -1,32 +1,87 @@
-const useCases = [
-  {
-    title: "CRISPR guide counting",
-    body: "Turn FASTQ/FASTQ.gz reads into MAGeCK-compatible count matrices, with QC summaries beside the counts."
-  },
-  {
-    title: "Inline barcode demultiplexing",
-    body: "Split fixed-position single-end reads by barcode. Ambiguous and unmatched reads can be written out for inspection."
-  },
-  {
-    title: "Classic BCL demultiplexing",
-    body: "Read classic per-cycle Illumina BCL folders and write sample FASTQ.gz files plus demux stats. CBCL is not supported yet."
-  },
-  {
-    title: "Audit, validation, and diagnosis",
-    body: "Check whether a library is safe to rescue at one edit, then validate indexed assignments against an exhaustive scan."
-  }
-];
-
 const repoUrl = "https://github.com/dnncha/dotmatch";
 const citationUrl = `${repoUrl}/blob/main/CITATION.cff`;
 const methodsUrl = `${repoUrl}/blob/main/docs/methods-and-citation.md`;
 const publicCrisprUrl = `${repoUrl}/blob/main/docs/benchmarks/public_crispr/README.md`;
 
 const proof = [
-  ["Best fit", "known target lists", "Guides, barcodes, primers, adapters, panels, and other short sequences where the candidate list is already fixed."],
-  ["Correctness rule", "index matches scan", "The fast path is tested against the native exhaustive scan for the same targets, k, and ambiguity policy."],
-  ["Public CRISPR data", "5 repeated rows", "The checked-in Yusa/MAGeCK rows cover 10k and 100k reads per sample, with Edlib validation and count-agreement gates."],
+  ["Best fit", "fixed target lists", "Guides, barcodes, primers, adapters, panels, and whitelist-style sequences where the candidates are already known."],
+  ["Correctness rule", "index matches scan", "The fast path is tested against the native exhaustive scan for the same targets, error allowance, and ambiguity policy."],
+  ["Public CRISPR data", "5 repeated rows", "The checked-in Yusa/MAGeCK rows cover 10k and 100k reads per sample, with count agreement and independent edit-distance checks."],
   ["Repository contents", "C, CLI, Python", "Core code, bindings, tests, scripts, reports, schemas, and raw benchmark tables live in the repo."]
+];
+
+const decisionCards = [
+  {
+    title: "Use DotMatch when you have",
+    items: [
+      "CRISPR guide-counting FASTQs",
+      "inline barcode reads",
+      "known primer, panel, or whitelist targets",
+      "classic per-cycle BCL demultiplexing jobs"
+    ]
+  },
+  {
+    title: "DotMatch gives you",
+    items: [
+      "one assignment per read",
+      "explicit ambiguous and unmatched reads",
+      "one-base mismatch or indel rescue",
+      "MAGeCK-compatible count matrices and QC tables"
+    ]
+  },
+  {
+    title: "Do not use DotMatch for",
+    items: [
+      "genome alignment or variant calling",
+      "SAM/BAM/CIGAR output",
+      "downstream CRISPR screen statistics",
+      "CBCL/NovaSeq demultiplexing or wildcard N semantics"
+    ]
+  }
+];
+
+const translations = [
+  ["known targets", "a fixed guide, barcode, primer, whitelist, or panel sequence list"],
+  ["Hamming k=1", "allow one mismatch, no indels"],
+  ["Levenshtein k=1", "allow one substitution, insertion, or deletion"],
+  ["ambiguous", "reads that match multiple targets are reported, not forced into a guide or barcode"],
+  ["peak RSS", "peak memory use"],
+  ["Edlib validation", "checked against an independent edit-distance implementation"]
+];
+
+const audienceCards = [
+  {
+    title: "CRISPR screen users",
+    body: "Count guides from FASTQ/FASTQ.gz into MAGeCK-compatible matrices, with exact, rescued, ambiguous, and unmatched reads in the QC."
+  },
+  {
+    title: "Sequencing cores",
+    body: "Demultiplex fixed-position inline barcodes while keeping ambiguous and unmatched reads available for review."
+  },
+  {
+    title: "Bioinformatics developers",
+    body: "Use the C core, CLI, Python bindings, schemas, validation commands, and raw benchmark artifacts."
+  },
+  {
+    title: "Methods reviewers",
+    body: "Inspect the claim gates, raw CSVs, exact commands, and validation against exhaustive or Edlib checks."
+  }
+];
+
+const workflowStatusRows = [
+  ["CRISPR guide counting", "Validated now", "Public MAGeCK/Yusa repeated rows, count agreement, Edlib validation, and raw command tables."],
+  ["Target-library audit", "Supported", "CLI tests, schemas, and validation commands for unsafe one-edit libraries."],
+  ["Inline barcode demux", "Supported, bounded", "Fixed-position FASTQ demux and smoke benchmark; broader real-data comparison still gated."],
+  ["Classic BCL demux", "Milestone", "Public 10x tiny-BCL row; CBCL/NovaSeq input is not supported yet."],
+  ["Genome alignment", "Not supported", "Out of scope: no SAM/BAM/CIGAR, reference mapping, or variant calling."]
+];
+
+const workflowChoiceRows = [
+  ["Downstream CRISPR screen statistics", "MAGeCK or another downstream screen-analysis tool"],
+  ["FASTQ-to-guide count matrix with explicit ambiguity QC", "DotMatch"],
+  ["Genome or transcriptome reference mapping", "Bowtie2, BWA, minimap-style tools, not DotMatch"],
+  ["Adapter trimming", "Cutadapt-style tools, not DotMatch"],
+  ["Known short target assignment with exact one-edit semantics", "DotMatch"]
 ];
 
 const commands = [
@@ -94,17 +149,23 @@ export default function Home() {
         <div className="hero-copy">
           <h1>DotMatch</h1>
           <p className="hero-lede">
-            Short-read assignment for target lists you already know.
+            Auditable assignment of short sequencing reads to known DNA targets.
           </p>
           <p className="hero-text">
-            DotMatch is a small C/Python tool for assays where a read should
-            land on one guide, barcode, primer, adapter, or panel target. It
-            checks exact, Hamming, and k=1 Levenshtein matches, and it leaves
-            ties visible.
+            DotMatch counts CRISPR guides, assigns inline barcodes, and matches
+            short primer, panel, or whitelist reads against a known target list.
+            It supports exact matching, one-mismatch rescue, and one-base
+            insertion or deletion rescue while reporting ambiguous reads instead
+            of silently guessing.
+          </p>
+          <p className="hero-note">
+            <strong>Best-supported today: CRISPR guide counting</strong> from
+            public MAGeCK/Yusa FASTQs, with MAGeCK-compatible count matrices, QC
+            summaries, raw benchmark artifacts, and validation checks.
           </p>
           <div className="hero-actions">
             <a href="#benchmarks" className="button primary">
-              Explore results
+              Read the CRISPR evidence
             </a>
             <a href="#install" className="button secondary">
               Install
@@ -117,7 +178,7 @@ export default function Home() {
         <div className="hero-panel" aria-label="DotMatch benchmark summary">
           <div className="panel-topline">
             <span>v0.1.0</span>
-            <span>known targets only</span>
+            <span>CRISPR-led evidence</span>
           </div>
           <div className="metric-grid">
             <div>
@@ -126,15 +187,15 @@ export default function Home() {
             </div>
             <div>
               <strong>0</strong>
-              <span>Edlib validation mismatches across sampled public CRISPR reads</span>
+              <span>Edlib validation mismatches across 2,000 checked reads</span>
             </div>
             <div>
               <strong>331k</strong>
-              <span>reads/s DotMatch Hamming k=1 mean on repeated 100k-record/sample rows</span>
+              <span>reads/s for one-mismatch CRISPR guide counting</span>
             </div>
             <div>
               <strong>28.7 MB</strong>
-              <span>peak RSS for DotMatch Hamming k=1 repeated public CRISPR rows</span>
+              <span>peak memory use in the repeated public CRISPR rows</span>
             </div>
           </div>
           <div className="sequence-rail" aria-hidden="true">
@@ -145,13 +206,93 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="section decision-section" aria-label="DotMatch adoption guide">
+        <div className="section-heading">
+          <h2>Use it when hidden assignment choices matter.</h2>
+          <p>
+            Most DotMatch jobs start as FASTQ reads and a target table. The
+            point is not only speed; it is making corrected, ambiguous, and
+            unmatched reads visible enough to audit.
+          </p>
+        </div>
+        <div className="decision-grid">
+          {decisionCards.map((card) => (
+            <article key={card.title} className="decision-card">
+              <h3>{card.title}</h3>
+              <ul>
+                {card.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+        <div className="translation-grid" aria-label="Biology translations for DotMatch terms">
+          {translations.map(([term, meaning]) => (
+            <div key={term}>
+              <span>{term}</span>
+              <p>{meaning}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="section example-section">
+        <div className="section-heading">
+          <h2>One CRISPR run, from FASTQ to QC.</h2>
+          <p>
+            This is the practical shape of the best-supported workflow: reads
+            in, a guide-by-sample count matrix out, and a small set of QC files
+            that say what happened to every assignment class.
+          </p>
+        </div>
+        <div className="example-layout">
+          <article className="example-card">
+            <span className="card-label">Minimal example</span>
+            <pre><code>{`dotmatch crispr-count \\
+  --library yusa_library.csv \\
+  --samples samples.tsv \\
+  --guide-start 23 \\
+  --guide-length 19 \\
+  --k 1 \\
+  --metric levenshtein \\
+  --indel-window 1 \\
+  --out counts.mageck.tsv \\
+  --summary qc.json \\
+  --report report.html`}</code></pre>
+            <div className="output-list" aria-label="DotMatch CRISPR outputs">
+              <code>counts.mageck.tsv</code>
+              <span>guide x sample count matrix</span>
+              <code>qc.json</code>
+              <span>exact, rescued, ambiguous, and unmatched reads</span>
+              <code>report.html</code>
+              <span>archived run report</span>
+            </div>
+          </article>
+          <article className="ambiguity-example">
+            <span className="card-label">Why ambiguity is explicit</span>
+            <pre><code>{`Read:    ACGTACGT
+Guide A: ACGTACGA   distance 1
+Guide B: ACGTACGC   distance 1
+
+Some tools may pick or double-count.
+DotMatch reports: ambiguous`}</code></pre>
+            <p>
+              Ambiguous reads are not silently counted into a guide or barcode.
+              They stay available for QC and diagnosis.
+            </p>
+          </article>
+        </div>
+      </section>
+
       <section id="install" className="section launch-section">
         <div className="section-heading">
           <h2>Start from the repo. Cite the exact release.</h2>
           <p>
             DotMatch is not on every package channel yet, so the honest first
-            install is from source. The repo includes the tests, benchmark
-            scripts, raw CSVs, and citation file we use ourselves.
+            install is from source. Current distribution: source install and
+            release artifacts. Coming next: PyPI, Bioconda, Docker/Singularity,
+            Zenodo DOI.
           </p>
         </div>
         <div className="launch-grid">
@@ -198,11 +339,13 @@ make repository-ready`}</code></pre>
 
       <section id="benchmarks" className="section proof-section">
         <div className="section-heading">
-          <h2>What we can defend today.</h2>
+          <h2>The public CRISPR evidence in plain English.</h2>
           <p>
-            We are keeping the claims narrow for v0.1.0. DotMatch is for
-            known-target FASTQ assignment; it is not a genome aligner or a
-            replacement for every demultiplexing stack.
+            We are keeping the claims narrow for v0.1.0. On repeated public
+            MAGeCK/Yusa CRISPR guide-counting rows, DotMatch Hamming k=1
+            processed about 331k reads/s using about 28.7 MB peak memory;
+            guide-counter processed about 195k reads/s using about 529 MB, and
+            MAGeCK exact count processed about 93k reads/s using about 159 MB.
           </p>
         </div>
         <div className="proof-grid">
@@ -223,7 +366,9 @@ make repository-ready`}</code></pre>
                 These rows are not a leaderboard. They are the first public case
                 we can rerun and inspect: five 100k-record/sample repeats for
                 DotMatch, MAGeCK, and guide-counter, with exact, Hamming, and
-                Levenshtein kept separate.
+                Levenshtein kept separate. Edlib validation checks 2,000 reads
+                with zero mismatches against an independent edit-distance
+                implementation.
               </p>
             </div>
             <HorizontalBarChart
@@ -241,7 +386,8 @@ make repository-ready`}</code></pre>
               <p>
                 On the public Yusa rows, the index sends about 2.822 candidate
                 targets per read to exact verification, out of an 87,437-guide
-                library.
+                library. In biology terms, that lane allows one substitution,
+                insertion, or deletion.
               </p>
             </div>
             <HorizontalBarChart
@@ -258,8 +404,8 @@ make repository-ready`}</code></pre>
               <h3>The CRISPR counter stays small.</h3>
               <p>
                 The repeated Yusa runs put DotMatch Hamming and exact lanes
-                around 28.7 MB peak RSS. guide-counter is around 528.7 MB on the
-                same fixture.
+                around 28.7 MB peak memory use. guide-counter is around 528.7
+                MB on the same fixture.
               </p>
             </div>
             <HorizontalBarChart
@@ -276,8 +422,8 @@ make repository-ready`}</code></pre>
               <h3>Comparator counts are useful, but not oracles.</h3>
               <p>
                 MAGeCK and guide-counter help us compare familiar workflows.
-                Correctness is checked against exhaustive assignment, not
-                whichever external tool happens to agree.
+                Correctness is checked against exhaustive assignment and Edlib,
+                not whichever external tool happens to agree.
               </p>
             </div>
             <AgreementChart rows={agreementRows} />
@@ -305,16 +451,15 @@ make repository-ready`}</code></pre>
 
       <section id="use-cases" className="section use-cases">
         <div className="section-heading">
-          <h2>Where it fits.</h2>
+          <h2>Who this is for.</h2>
           <p>
-            We wrote DotMatch for assays that already have a small target list.
-            If you need genome mapping, SAM/BAM, CIGAR, wildcard N matching,
-            CBCL/NovaSeq BCL input, or package-channel installs, those are still
-            future work.
+            The same engine serves a few different readers. The strongest
+            adoption path today is CRISPR guide counting, but the audit trail is
+            useful anywhere short reads must land on a fixed target list.
           </p>
         </div>
         <div className="usecase-grid">
-          {useCases.map((item) => (
+          {audienceCards.map((item) => (
             <article key={item.title} className="usecase">
               <span className="usecase-dot" />
               <h3>{item.title}</h3>
@@ -324,64 +469,69 @@ make repository-ready`}</code></pre>
         </div>
       </section>
 
+      <section className="section status-section">
+        <div className="section-heading">
+          <h2>Validated now, available but early, or out of scope.</h2>
+          <p>
+            The project has several surfaces. This table keeps the strongest
+            public claim separate from smoke tests and future distribution work.
+          </p>
+        </div>
+        <div className="status-table" role="table" aria-label="DotMatch workflow maturity">
+          <div role="row" className="table-head">
+            <span>Workflow</span>
+            <span>Status</span>
+            <span>Evidence level</span>
+          </div>
+          {workflowStatusRows.map(([workflow, status, evidence]) => (
+            <div role="row" key={workflow}>
+              <span data-label="Workflow">{workflow}</span>
+              <span data-label="Status">{status}</span>
+              <span data-label="Evidence level">{evidence}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section id="comparison" className="section comparison">
         <div className="section-heading">
-          <h2>Built around the awkward cases.</h2>
+          <h2>How to place it beside familiar tools.</h2>
           <p>
-            The important cases are not just matches. DotMatch keeps ambiguous,
-            unsafe, and unmatched reads available so a run can be audited later.
+            DotMatch is not trying to replace every CRISPR, trimming, or mapping
+            tool. It is the assignment and QC step when a read should map to one
+            known short DNA target.
           </p>
         </div>
         <div className="comparison-layout">
           <div className="comparison-table" role="table" aria-label="DotMatch current CLI support">
             <div role="row" className="table-head">
-              <span>Part</span>
-              <span>Works now</span>
-              <span>Still outside v0.1.0</span>
+              <span>Need</span>
+              <span>Use</span>
             </div>
-            <Row
-              a="Core assignment"
-              b="Exact global edit distance, threshold queries, k=0/k=1 index, best or radius ambiguity policy"
-              c="No semi-global/infix alignment, traceback, CIGAR, or wildcard N matching yet"
-            />
-            <Row
-              a="CRISPR counting"
-              b="FASTQ/FASTQ.gz count, crispr-count wrapper, MAGeCK matrix, QC JSON/TSV, HTML report"
-              c="Evidence is for Yusa-style guide counting, not broad screen analysis"
-            />
-            <Row
-              a="Inline demux"
-              b="Fixed-position single-end FASTQ/FASTQ.gz barcode splitting with ambiguous and unmatched outputs"
-              c="The built-in fixture is a smoke test; real public barcode rows still need more work"
-            />
-            <Row
-              a="Classic BCL demux"
-              b="RunInfo, SampleSheet v1/v2 data sections, classic per-cycle BCL(.gz), filter files, sample FASTQ.gz"
-              c="CBCL/NovaSeq-style input remains a planned milestone"
-            />
-            <Row
-              a="Checks and diagnostics"
-              b="audit, validate, optional Edlib oracle, inspect-unmatched, public TSV/JSON schemas"
-              c="Hosted workflow management is outside the current repository scope"
-            />
+            {workflowChoiceRows.map(([need, tool]) => (
+              <div role="row" key={need}>
+                <span data-label="Need">{need}</span>
+                <span data-label="Use">{tool}</span>
+              </div>
+            ))}
           </div>
           <div className="evidence-notes">
             <article>
-              <span>Synthetic inline demux</span>
-              <strong>918k reads/s</strong>
+              <span>One read policy</span>
+              <strong>0</strong>
               <p>
-                This is a 20k-read smoke fixture with four barcodes and Hamming
-                k=1. It matches Cutadapt assigned/unmatched totals. We do not
-                present it as a broad barcode benchmark.
+                DotMatch records zero overcount reads in the 2/4/8-sample CRISPR
+                scaling run. Ambiguity is reported instead of being hidden in a
+                count total.
               </p>
             </article>
             <article>
-              <span>Classic BCL demux</span>
-              <strong>61k clusters/s</strong>
+              <span>Bounded demux evidence</span>
+              <strong>918k</strong>
               <p>
-                The public 10x tiny-BCL row has 2.14M clusters, 132 cycles, and
-                one sample. The bcl2fastq comparator row is 20.8k clusters/s
-                with zero validation mismatches.
+                The inline demux row is a 20k-read smoke fixture with four
+                barcodes and Hamming k=1. It is useful pipeline evidence, not a
+                broad barcode benchmark.
               </p>
             </article>
           </div>
@@ -392,9 +542,10 @@ make repository-ready`}</code></pre>
         <div className="workflow-copy">
           <h2>Command-line first.</h2>
           <p>
-            The core is C, with a CLI and Python ctypes bindings. Runs can write
-            count matrices, FASTQ splits, QC tables, assignment diagnostics,
-            audit files, validation summaries, and self-contained HTML reports.
+            DotMatch is a small C/Python tool with a CLI and Python ctypes
+            bindings. Runs can write count matrices, FASTQ splits, QC tables,
+            assignment diagnostics, audit files, validation summaries, and
+            self-contained HTML reports.
           </p>
         </div>
         <div className="terminal" aria-label="DotMatch commands">
@@ -412,26 +563,17 @@ make repository-ready`}</code></pre>
       </section>
 
       <section className="section final-cta">
-        <h2>For short reads with known targets.</h2>
+        <h2>For short reads with known targets and real QC stakes.</h2>
         <p>
-          Use DotMatch when exact one-edit assignment matters, and when the
-          ambiguous or unmatched reads are as important as the counts.
+          Use DotMatch when exact one-edit assignment matters, when ambiguous or
+          unmatched reads are as important as the counts, and when another lab
+          should be able to inspect how the calls were made.
         </p>
         <a className="button primary" href="#benchmarks">
           Review the evidence
         </a>
       </section>
     </main>
-  );
-}
-
-function Row({ a, b, c }: { a: string; b: string; c: string }) {
-  return (
-    <div role="row">
-      <span data-label="Surface">{a}</span>
-      <span data-label="Works now">{b}</span>
-      <span data-label="Not yet">{c}</span>
-    </div>
   );
 }
 
