@@ -462,7 +462,11 @@ make bench-feature-barcode-public
 make feature-barcode-public-gate
 ```
 
-The checked feature-barcode lane uses a 10x Genomics TotalSeq-B antibody Feature Barcode R2 subsample, the 10x feature reference pattern `^NNNNNNNNNN(BC)NNNNNNNNN`, and an exact-slice hash baseline. It supports per-read fixed-window assignment wording only; it is not Cell Ranger UMI/cell-level quantification evidence.
+The checked feature-barcode lane uses a 10x Genomics TotalSeq-B antibody
+Feature Barcode R2 subsample, the 10x feature reference pattern
+`^NNNNNNNNNN(BC)NNNNNNNNN`, and an exact-slice hash baseline. Use it to talk
+about per-read fixed-window assignment, not Cell Ranger-style UMI/cell
+quantification.
 
 Public 10x CRISPR guide-capture assignment benchmark/report:
 
@@ -472,7 +476,12 @@ make bench-perturb-seq-public
 make perturb-seq-public-gate
 ```
 
-The checked perturb-seq-adjacent lane uses a 10x Genomics GEM-X A375 CRISPR Guide Capture R2 subsample, selects the observed fixed guide window from the public feature reference and FASTQ prefix, and validates DotMatch k=0 against an exact-slice hash baseline. It supports per-read fixed-window guide-capture assignment wording only; it is not Cell Ranger guide-per-cell, UMI/cell quantification, expression, or perturbation-effect evidence.
+The checked perturb-seq-adjacent lane uses a 10x Genomics GEM-X A375 CRISPR
+Guide Capture R2 subsample, selects the observed fixed guide window from the
+public feature reference and FASTQ prefix, and validates DotMatch k=0 against
+an exact-slice hash baseline. Use it for per-read guide-capture assignment
+wording. It does not cover Cell Ranger guide-per-cell calls, UMI/cell
+quantification, expression, or perturbation-effect analysis.
 
 Public nf-core ARTIC amplicon/panel assignment benchmark/report:
 
@@ -482,7 +491,11 @@ make bench-amplicon-panel-public
 make amplicon-panel-public-gate
 ```
 
-The checked amplicon/panel lane uses an nf-core/test-datasets viralrecon Illumina ARTIC V3 R1 subsample, selects the observed full-primer fixed prefix group, and validates DotMatch k=0 against an exact-prefix hash baseline. It supports per-read fixed-window primer-start assignment wording only; it is not amplicon consensus, primer trimming, variant calling, clinical-panel, or diagnostic evidence.
+The checked amplicon/panel lane uses an nf-core/test-datasets viralrecon
+Illumina ARTIC V3 R1 subsample, selects the observed full-primer fixed prefix
+group, and validates DotMatch k=0 against an exact-prefix hash baseline. Use it
+for per-read primer-start assignment wording. It does not cover consensus
+generation, primer trimming, variant calling, clinical panels, or diagnostics.
 
 Public oligo/adapter fixed-window prefix assignment benchmark/report:
 
@@ -492,7 +505,11 @@ make bench-oligo-adapter-public
 make oligo-adapter-public-gate
 ```
 
-The checked oligo/adapter lane uses the public fast-adapter-trimming TruSeq R1 fixture, deduplicates 20 bp adapter-prefix targets, and validates DotMatch k=0 against an exact-slice hash baseline at the fixed R1 window. It supports adapter-prefix assignment wording only; it is not adapter trimming, primer removal, UMI grouping, read merging, or production adapter workflow evidence.
+The checked oligo/adapter lane uses the public fast-adapter-trimming TruSeq R1
+fixture, deduplicates 20 bp adapter-prefix targets, and validates DotMatch k=0
+against an exact-slice hash baseline at the fixed R1 window. Use it for
+adapter-prefix assignment wording. It does not cover adapter trimming, primer
+removal, UMI grouping, read merging, or production adapter workflows.
 
 Raw BCL demultiplexing benchmark/report:
 
@@ -727,6 +744,10 @@ The current scope is:
 
 > Fast exact short-DNA global edit-distance and threshold assignment for barcode/primer-style workloads, with correctness verified against dynamic programming and native Edlib assignment scans.
 
-The current native Edlib benchmark supports workload-level assignment speedups, not generic pairwise-alignment wording. Cutadapt/Bowtie/Bowtie2 FASTQ demultiplexing comparisons and native SeqAn/Parasail comparisons require matching evidence before broader ecosystem wording is used; see `docs/native-comparator-scope.md` for the required SeqAn/Parasail evidence boundary.
+The current native Edlib benchmark supports workload-level assignment speedups,
+not generic pairwise-alignment wording. Cutadapt/Bowtie/Bowtie2 FASTQ
+demultiplexing comparisons and native SeqAn/Parasail comparisons need matching
+datasets, semantics, and validation before the README or website should make
+broader ecosystem comparisons.
 
 Exact `k=0` lookup should be compared against hash-table baselines. For `k=1` known-target short-DNA assignment, the index reduces exhaustive alignment work while preserving exact assignment semantics.

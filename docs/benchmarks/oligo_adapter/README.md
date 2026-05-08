@@ -44,4 +44,10 @@ python3 scripts/bench_oligo_adapter.py --include-public --metadata examples/olig
 
 ## Evidence Boundary
 
-Use these lanes only to verify fixed-window known-oligo/adapter assignment, one-substitution rescue, and explicit ambiguous/unmatched diagnostics. Run `make oligo-adapter-smoke-gate` for smoke evidence and `make oligo-adapter-public-gate` for the public lane. The public lane supports adapter-prefix assignment wording for the checked R1 window only; it is not adapter trimming evidence. Primer removal, UMI grouping, read merging, or production workflow claims require separate comparator semantics, raw artifacts, validation, and a passing gate.
+Use these lanes for fixed-window known-oligo/adapter assignment,
+one-substitution rescue, and explicit ambiguous/unmatched diagnostics. Run
+`make oligo-adapter-smoke-gate` for the smoke fixture and
+`make oligo-adapter-public-gate` for the public lane. The public lane supports
+adapter-prefix assignment for the checked R1 window. Adapter trimming, primer
+removal, UMI grouping, read merging, and production workflow comparisons need
+their own comparator semantics, raw artifacts, validation, and gate.

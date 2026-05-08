@@ -247,7 +247,7 @@ def check_evidence_docs(root: Path, result: AuditResult) -> None:
     if "not a genome aligner" not in evidence and "General aligner replacement" not in evidence:
         result.failures.append("docs/scientific-claims.md must document the general-aligner evidence boundary")
     native_scope_fragments = [
-        "SeqAn and Parasail comparisons are not claimed as completed release evidence yet",
+        "Do not use SeqAn or Parasail in README, website, or release-note performance",
         "equivalent global edit-distance or documented semi-global scoring semantics",
         "fixed threshold `k`",
         "zero assignment mismatches",

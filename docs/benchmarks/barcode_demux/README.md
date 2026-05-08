@@ -26,7 +26,11 @@ The benchmark script can also emit a simple `hash_splitter_exact` row. This is a
 
 ## Comparison Evidence Gate
 
-This table passes `make barcode-comparison-gate` for the checked SRP009896/SRR391079 exact-prefix lane. Keep wording specific: Cutadapt is run as anchored no-indel demux after trimming the leading `N`, and `hash_splitter_exact` is a transparent exact-prefix baseline, not an edit-distance demultiplexer.
+`make barcode-comparison-gate` passes for the SRP009896/SRR391079 exact-prefix
+lane shown above. The wording should stay narrow here: Cutadapt is run as an
+anchored no-indel demultiplexer after trimming the leading `N`, and
+`hash_splitter_exact` is a simple exact-prefix baseline, not an edit-distance
+demultiplexer.
 
 Suggested real-data starting point: SRP009896 / SRR391079-SRR391082, a maize GBS dataset described in public Cutadapt demultiplexing examples as 5-prime inline barcode reads with 96 demultiplexed outputs. `scripts/fetch_srp009896_barcode_demo.py --use-public-example-barcodes` extracts the first-member barcode sheet from the public Google Drive example archive with a ranged request instead of downloading the full 7.4 GB ZIP, then filters rows to the requested accession when the run column is present.
 

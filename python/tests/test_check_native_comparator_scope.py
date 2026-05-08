@@ -10,7 +10,9 @@ VALID_SCOPE = """# Native Comparator Scope
 
 DotMatch currently has one native alignment-library comparator: Edlib exhaustive global edit-distance assignment. The generated native report records Edlib through `EDLIB_MODE_NW`, `EDLIB_TASK_DISTANCE`, fixed threshold `k`, and zero assignment mismatches before speedups are reported.
 
-SeqAn and Parasail comparisons are not claimed as completed release evidence yet. Before either name can be used in README, website, paper, or release-note performance wording, the repository must include all of the following:
+Do not use SeqAn or Parasail in README, website, or release-note performance
+wording yet. Before either name belongs in those comparisons, the repository
+needs all of the following:
 
 - equivalent global edit-distance or documented semi-global scoring semantics for the exact workload being claimed;
 - fixed threshold `k` and identical assignment policy for unique, ambiguous, no-match, and invalid reads;
@@ -54,7 +56,7 @@ def test_native_comparator_scope_rejects_unbounded_seqan_parasail_claim(tmp_path
     path.parent.mkdir(parents=True)
     path.write_text(
         VALID_SCOPE.replace(
-            "SeqAn and Parasail comparisons are not claimed as completed release evidence yet",
+            "Do not use SeqAn or Parasail in README, website, or release-note performance",
             "SeqAn and Parasail comparisons are complete",
         ),
         encoding="utf-8",
@@ -62,7 +64,7 @@ def test_native_comparator_scope_rejects_unbounded_seqan_parasail_claim(tmp_path
 
     failures = checker.check(tmp_path)
 
-    assert any("SeqAn and Parasail comparisons are not claimed" in failure for failure in failures)
+    assert any("Do not use SeqAn or Parasail" in failure for failure in failures)
 
 
 def test_native_comparator_scope_requires_zero_mismatch_evidence(tmp_path):
